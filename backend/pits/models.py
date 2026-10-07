@@ -29,9 +29,21 @@ class Pit(models.Model):
     status = models.CharField(max_length=20, default=STATUS_FILL)
     row = models.IntegerField(default=0)
     col = models.IntegerField(default=0)
+    version = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ("yard", "code")
+
+
+class RowGrant(models.Model):
+    """一排坑位的操作工名单：在册者能改该排，空名单仅管理员可改。"""
+
+    yard = models.ForeignKey(Yard, on_delete=models.CASCADE, related_name="row_grants")
+    row = models.IntegerField(default=0)
+    names = models.JSONField(default=list)
+
+    class Meta:
+        unique_together = ("yard", "row")
 
 
 class LiquorSample(models.Model):
